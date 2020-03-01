@@ -1,0 +1,107 @@
+<!-- vue 事件 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>{{message}}</div>
+        <ul>
+            <li v-for="item in list">
+                <span v-if="!item.del">{{item.title}}</span>
+                <span v-else="item.del" style="text-decoration: line-through;">{{item.title}}</span>
+                <button v-show="!item.del" @click="handleClick">删除</button>
+            </li>
+        </ul>
+        <ul>
+            <todo-item v-for="item in list" :title="item.title" :del="item.del"></todo-item>
+        </ul>
+        <todo-list></todo-list>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        Vue.component("todo-list", {
+            // props: {
+            //     list1: [
+            //         title,
+            //         del,                  
+            //     ]
+            // },
+            template: `
+            <ul>
+            <todo-item @delete="delclick" v-for="item in list" :title="item.title" :del="item.del"></todo-item>
+            </ul>
+            `,
+            data: function () {
+                return {
+                    list: [{
+                        title: '课程1',
+                        del: false
+                    }, {
+                        title: '课程2',
+                        del: true
+                    }
+                    ],
+                }
+            },
+            methods:{
+                delclick(val){
+                    console.log("delclick=", val)
+                } 
+            }
+
+        })
+        Vue.component("todo-item", {
+            props: {
+                title: String,
+                del: {
+                    type: Boolean,
+                    default: true
+                }
+            },
+            template: `
+            <li>
+                <span v-if="!del">{{title}}</span>
+                <span v-else="del" style="text-decoration: line-through;">{{title}}</span>
+                <button v-show="!del" @click="click1">删除</button>
+            </li>
+            `,
+            methods: {
+                click1() {
+                    console.log("click1:")
+                    this.$emit('delete', this.title)
+                }
+            },
+            date: function () {
+                return {}
+            }
+        })
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                message: 'event',
+                list: [{
+                    title: '课程1',
+                    del: false
+                }, {
+                    title: '课程2',
+                    del: true
+                }
+                ],
+            },
+            methods: {
+                handleClick() {
+                    console.log("点击了删除按钮")
+                },
+            },
+        })
+    </script>
+
+</body>
+
+</html>
